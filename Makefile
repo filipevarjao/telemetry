@@ -1,20 +1,21 @@
-REBAR = $(shell command -v rebar3 || echo ./rebar3)
+IGNORE_DEPS += edown eper eunit_formatters meck node_package rebar_lock_deps_plugin rebar_vsn_plugin reltool_util
+C_SRC_DIR = /path/do/not/exist
+C_SRC_TYPE = rebar
+DRV_CFLAGS = -fPIC
+export DRV_CFLAGS
+ERLANG_ARCH = 64
+export ERLANG_ARCH
+ERLC_OPTS = +debug_info
+export ERLC_OPTS
 
-.PHONY: all compile test qc clean
 
-all: compile
 
-compile:
-	@$(REBAR) compile
+rebar_dep: preprocess pre-deps deps pre-app app
 
-test:
-	@$(REBAR) eunit
+preprocess::
 
-qc: compile
-	@$(REBAR) eqc
+pre-deps::
 
-clean:
-	@$(REBAR) clean
+pre-app::
 
-dialyze:
-	@$(REBAR) dialyzer
+include $(if $(ERLANG_MK_FILENAME),$(ERLANG_MK_FILENAME),erlang.mk)
